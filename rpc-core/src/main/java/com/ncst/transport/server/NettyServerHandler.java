@@ -79,18 +79,18 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcRequest> 
 
 
     /****
-     * 上下文
+     * 开启心跳机制后，如果连接后的时间太长，将会触发一个IdleStateEvent事件。
+     * 重写userEventTriggered 可以处理该事件
      * @param ctx
      * @param evt
      * @throws Exception
      */
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        //心跳检测
+        //心跳检测 如果属于IdelStateEvent事件
         if (evt instanceof IdleStateEvent) {
-            //
             IdleState state = ((IdleStateEvent) evt).state();
-            //未收到心跳
+            //未收到读事件
             if (state == IdleState.READER_IDLE) {
                 logger.info("【...长时间未收到心跳包，断开连接...】");
                 ctx.close();

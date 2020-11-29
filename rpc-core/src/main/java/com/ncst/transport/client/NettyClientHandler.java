@@ -56,10 +56,18 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<RpcResponse>
         ctx.close();
     }
 
+    /****
+     * 心跳处理
+     * @param ctx
+     * @param evt
+     * @throws Exception
+     */
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        //如果属于心跳事件 则处理
         if (evt instanceof IdleStateEvent) {
             IdleState state = ((IdleStateEvent) evt).state();
+            //发送读心跳事件
             if (state == IdleState.WRITER_IDLE) {
                 logger.info("---发送心跳包---" + ctx.channel().remoteAddress());
                 Channel channel = ChannelProvider.get((InetSocketAddress) ctx.channel().remoteAddress(), CommonSerializer.getBytes(CommonSerializer.DEFAULT_SERIALIZER));

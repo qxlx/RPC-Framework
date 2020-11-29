@@ -64,7 +64,7 @@ public class NettyServer extends AbstractRpcServer {
                     .handler(new LoggingHandler(LogLevel.INFO))//log日志
                     //初始化可连接服务端队列大小，同一时间可以处理的客户端连接数
                     .option(ChannelOption.SO_BACKLOG,256)
-                    //一直保持连接状态
+                    //开启server端Tcp Keepalive
                     .option(ChannelOption.SO_KEEPALIVE,true)
                     //tcp不延时
                     .childOption(ChannelOption.TCP_NODELAY,true)

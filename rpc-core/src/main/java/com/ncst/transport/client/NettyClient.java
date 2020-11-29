@@ -87,14 +87,14 @@ public class NettyClient implements RpcClient {
         try {
             //根据服务名查询某一个台服务
             InetSocketAddress inetSocketAddress = serviceDiscovery.lookUpService(rpcRequest.getInterfaceName());
-            //
+            //根据ip信息和序列化方式查找通道
             Channel channel = ChannelProvider.get(inetSocketAddress, commonSerializer);
             //如果通道没有激活 直接关闭
             if (!channel.isActive()) {
                 workGroup.shutdownGracefully();
                 return null;
             }
-            //
+            //存放未处理的请求
             unprocessedRequests.put(rpcRequest.getId(), resultFuture);
             //将数据写入到通道里 并设置一个监听器
             channel.writeAndFlush(rpcRequest).addListener((ChannelFutureListener) future -> {

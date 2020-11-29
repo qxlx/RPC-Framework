@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @Auther: i
  * @Date: 2020/10/21/15:23
- * @Description:
+ * @Description:  key为requestId value为future 存放未处理的请求
  */
 public class UnprocessedRequests {
 
@@ -22,8 +22,12 @@ public class UnprocessedRequests {
     private static ConcurrentHashMap<String, CompletableFuture<RpcResponse>> unprocessedMap =
             new ConcurrentHashMap<>();
 
+    /****
+     * 存储
+     * @param requestId
+     * @param future
+     */
     public void put (String requestId , CompletableFuture<RpcResponse> future) {
-
         try {
             unprocessedMap.put(requestId,future);
         } catch (Exception e) {
@@ -31,10 +35,18 @@ public class UnprocessedRequests {
         }
     }
 
+    /***
+     * 删除
+     * @param requestId
+     */
     public void remove (String requestId) {
         unprocessedMap.remove(requestId);
     }
 
+    /****
+     *
+     * @param rpcResponse
+     */
     public void complete (RpcResponse rpcResponse) {
         CompletableFuture<RpcResponse> future = unprocessedMap.remove(rpcResponse.getRequestId());
         if (future != null) {

@@ -109,7 +109,8 @@ public class ChannelProvider {
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(eventLoopGroup)
                 .channel(NioSocketChannel.class)
-                //连接时间
+                //连接的超时时间，超过这个时间还是建立不了的话 就代表连接失败，
+                //如果15秒内没有发送数据给服务端的话，就发送一次心跳请求。
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
                 //开启TCP 底层心跳
                 .option(ChannelOption.SO_KEEPALIVE, true)
